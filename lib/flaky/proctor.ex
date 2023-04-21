@@ -50,10 +50,21 @@ defmodule Flaky.Proctor do
 
   def handle_call({:start_tests, opts}, _from, %{status: :idle} = state) do
     concurrency = Keyword.get(opts, :concurrency, 2)
-    filename = Keyword.fetch!(opts, :filename)
+    filename = Keyword.get(opts, :filename, "no file specified")
     max_tests = Keyword.get(opts, :max_tests, 100)
+    test_path = Keyword.get(opts, :test_path, "no path specified")
 
-    IO.inspect({"Starting tests: #{filename}", concurrency, max_tests})
+    IO.inspect({
+      "Starting tests",
+      "filename: ",
+      filename,
+      "concurrency: ",
+      concurrency,
+      "max tests: ",
+      max_tests,
+      "test path",
+      test_path
+    })
 
     for _ <- 1..concurrency do
       {:ok, pid} = Tests.perform(opts)
