@@ -1,6 +1,8 @@
 defmodule Flaky do
   alias Flaky.Proctor
 
+  defdelegate testing?, to: Proctor
+
   @doc """
   Starts asynchronous tests using the given name. the name should be a relative
   path based on the root of the product you're testing.
@@ -16,6 +18,7 @@ defmodule Flaky do
     * :filename - [Optional] The name of the file to test.
     * :line - [Optional] The line number of the scope for the test.
     * :max_tests - [Optional] The max number of tests to run successfully before stopping. Default 100.
+    * :seed - [Optional] The seed to use for randomizing the tests.
     * :test_path - [Optional] The relative path for the test file.
   """
   @spec test(keyword()) :: :ok | {:error, :already_running}
@@ -31,8 +34,15 @@ defmodule Flaky do
 
     if is_nil(app_dir), do: raise(ArgumentError, "You must provide :app_dir option")
 
-    if test_path && filename do
-      File.cd!(app_dir <> "/" <> test_path)
+    case (app_dir <> "/" <> test_path) |> File.cd() do
+      {:error, reason} ->
+        raise(ArgumentError, ~s(test path "#{app_dir <> "/" <> test_path}" is invalid: #{reason}))
+
+      :ok ->
+        :ok
+    end
+
+    if filename do
       unless File.exists?(filename), do: raise(ArgumentError, "file does not exist!")
     end
 

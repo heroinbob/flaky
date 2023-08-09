@@ -1,15 +1,13 @@
-defmodule Flaky.Proctor do
+defmodule Flaky.Test.Suppost.FakeProctor do
   @moduledoc """
-  GenServer that manages the tests and reports the results.
-
-  One server is run when the app is started. It maintains state and tracks the
-  test processes.
+  GenServer that acts as a standin for tests that need to interact with the
+  Proctor.
   """
   use GenServer
 
   alias Flaky.Tests
 
-  @server_name :proctor
+  @server_name :test_proctor
   def server_name, do: @server_name
 
   defstruct app_dir: nil,
@@ -101,7 +99,7 @@ defmodule Flaky.Proctor do
 
   def handle_cast({:test_failed, output}, state) do
     Tests.cancel()
-    IO.puts("\nTest Failed! Output is below:\n")
+    IO.puts("\nFailed!")
     IO.puts(output)
 
     {:noreply, %{state | status: :idle}}
