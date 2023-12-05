@@ -27,16 +27,29 @@ defmodule Flaky.Proctor do
   end
 
   @doc """
+  Stops the tests and return to idle state.
+  """
+  def stop_tests, do: GenServer.cast(@server_name, :stop_tests)
+
+  @doc """
   Returns true if the proctor is currently running tests.
   """
   def testing?, do: GenServer.call(@server_name, :testing?)
 
   @doc """
   Starts the tests and tracking.
+
+  This will make a synchronous call to compile the app first before starting the
+  tests. That can take time in an umbrella app with a lot of deps so this will
+  timeout after 60 seconds. You can pass an optional `timeout` value other than
+  60 seconds if you need to.
   """
-  @spec start_tests(keyword()) :: :ok | {:error, :already_running}
-  def start_tests(opts) do
-    GenServer.call(@server_name, {:start_tests, opts})
+  @spec start_tests(keyword()) ::
+          {:ok, :testing}
+          | {:error, :already_running}
+          | {:error, {:compile_failed, {String.t(), non_neg_integer()}}}
+  def start_tests(opts, timeout \\ 60_000) do
+    GenServer.call(@server_name, {:start_tests, opts}, timeout)
   end
 
   def test_failed(output), do: GenServer.cast(@server_name, {:test_failed, output})
@@ -82,7 +95,7 @@ defmodule Flaky.Proctor do
 
     {
       :reply,
-      :ok,
+      {:ok, :testing},
       %{
         state
         | app_dir: app_dir,
@@ -98,6 +111,11 @@ defmodule Flaky.Proctor do
 
   def handle_call(:testing?, _from, %{status: :running} = state), do: {:reply, true, state}
   def handle_call(:testing?, _from, state), do: {:reply, false, state}
+
+  def handle_casts(:stop_tests, state) do
+    Tests.cancel()
+    {:noreply, %{state | status: :idle}}
+  end
 
   def handle_cast({:test_failed, output}, state) do
     Tests.cancel()

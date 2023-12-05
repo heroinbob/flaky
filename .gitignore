@@ -24,3 +24,6 @@ flaky-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Go ahead - put your own config files here.
+/config/

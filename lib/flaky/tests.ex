@@ -2,6 +2,9 @@ defmodule Flaky.Tests do
   alias Flaky.Proctor
   alias Flaky.TestSupervisor
 
+  @doc """
+  Cancels all running tests.
+  """
   def cancel do
     # TODO: Add verbosity!
     IO.puts("\nCANCELLING!")
@@ -30,6 +33,15 @@ defmodule Flaky.Tests do
     line = Keyword.get(opts, :line) || :no_line
     seed = Keyword.get(opts, :seed) || :default
     test_path = Keyword.get(opts, :test_path) || :no_test_path
+
+    ###
+    # Well we have a problem - when the app needs to be compiled we run into a
+    # race condition - so we need to be sure to compile the app prior to running
+    # a test!
+    ###
+    # File.cd!(app_dir)
+    # System.cmd("elixir", ["--version"]) |> IO.inspect()
+    ###
 
     filename
     |> maybe_filter(line, test_path)
@@ -61,7 +73,7 @@ defmodule Flaky.Tests do
   end
 
   defp handle_result({true, _output}, proctor) do
-    IO.puts(_output)
+    # IO.puts(_output)
     proctor.test_passed()
   end
 
