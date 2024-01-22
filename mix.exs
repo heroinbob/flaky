@@ -4,10 +4,11 @@ defmodule Flaky.MixProject do
   def project do
     [
       app: :flaky,
-      version: "0.1.0",
+      deps: deps(),
       elixir: "~> 1.14",
+      escript: [main_module: Flaky.CLI],
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      version: "0.1.0"
     ]
   end
 

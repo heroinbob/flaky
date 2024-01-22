@@ -104,8 +104,8 @@ defmodule Flaky do
         # IO.puts("done!")
         opts
 
-      {_stream, _code} ->
-        raise(CompileError, "Compilation failed!")
+      {_stream, code} ->
+        raise(CompileError, "Compilation failed! #{inspect(code)}")
     end
   end
 end
