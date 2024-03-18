@@ -6,7 +6,6 @@ defmodule Flaky.TestsTest do
   describe "perform/1" do
     test "invokes the correct command when given only test path" do
       assert {:ok, pid} = Tests.perform(test_path: "a_path")
-      assert
     end
 
     test "invokes the correct command when given test path and filename"
