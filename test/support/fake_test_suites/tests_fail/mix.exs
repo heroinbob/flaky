@@ -1,23 +1,20 @@
-defmodule Flaky.MixProject do
+defmodule TestsFail.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :flaky,
-      deps: deps(),
-      elixir: "~> 1.14",
-      escript: [main_module: Flaky.CLI],
-      elixirc_paths: elixirc_paths(Mix.env()),
+      app: :tests_fail,
+      version: "0.1.0",
+      elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,
-      version: "0.1.0"
+      deps: deps()
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      mod: {Flaky.Application, []}
+      extra_applications: [:logger]
     ]
   end
 
@@ -28,7 +25,4 @@ defmodule Flaky.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
   end
-
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_), do: ["lib"]
 end
