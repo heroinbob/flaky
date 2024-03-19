@@ -115,7 +115,7 @@ defmodule Flaky.SynchronousTestsTests do
     test "returns :error when given :ignore_all_except and there's a match" do
       options = %Options{
         app_dir: @fail_app_dir,
-        ignore_all_except: "fail_test.exs:14",
+        ignore_all_except: "tests_fail_test.exs:16",
         test_path: "test"
       }
 
