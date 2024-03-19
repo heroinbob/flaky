@@ -3,9 +3,8 @@ defmodule Flaky.SynchronousTestsTests do
 
   alias Flaky.SynchronousTests
 
-  @flaky_dir :flaky |> Application.app_dir() |> String.split("_build/") |> List.first()
-  @all_pass_app_dir @flaky_dir <> "test/support/fake_test_suites/all_tests_pass"
-  @fail_app_dir @flaky_dir <> "test/support/fake_test_suites/tests_fail"
+  @all_pass_app_dir Flaky.Test.Support.FakeApps.all_pass_app_dir()
+  @fail_app_dir Flaky.Test.Support.FakeApps.fail_app_dir()
 
   describe "perform/1" do
     test "runs the mix command scoped to the given app and returns the output" do
