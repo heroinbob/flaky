@@ -1,27 +1,6 @@
 defmodule Mix.Tasks.Flaky.Test do
   @moduledoc """
-  Create the storage for the given repository.
-
-  The repositories to create are the ones specified under the
-  `:ecto_repos` option in the current app configuration. However,
-  if the `-r` option is given, it replaces the `:ecto_repos` config.
-
-  Since Ecto tasks can only be executed once, if you need to create
-  multiple repositories, set `:ecto_repos` accordingly or pass the `-r`
-  flag multiple times.
-
-  ## Examples
-
-      $ mix ecto.create
-      $ mix ecto.create -r Custom.Repo
-
-  ## Command line options
-
-    * `-r`, `--repo` - the repo to create
-    * `--quiet` - do not log output
-    * `--no-compile` - do not compile before creating
-    * `--no-deps-check` - do not compile before creating
-
+  Run tests and find the flaky one.
   """
   use Mix.Task
 
@@ -29,24 +8,27 @@ defmodule Mix.Tasks.Flaky.Test do
 
   @aliases [
     a: :app,
-    c: :concurrency,
     f: :filename,
+    i: :ignore_all_except,
     l: :line,
+    m: :max_tests,
+    s: :seed,
     t: :test_path
   ]
 
   @switches [
     app: :string,
-    concurrency: :integer,
     filename: :string,
+    ignore_all_except: :string,
     line: :integer,
+    max_tests: :integer,
+    seed: :integer,
     test_path: :string
   ]
 
   @impl true
   def run(args) do
     {opts, _} = OptionParser.parse!(args, strict: @switches, aliases: @aliases)
-    concurrency = Keyword.get(opts, :concurrency, 2)
     filename = Keyword.get(opts, :filename)
     line = Keyword.get(opts, :line)
     test_path = Keyword.get(opts, :test_path, "test")
@@ -68,7 +50,6 @@ defmodule Mix.Tasks.Flaky.Test do
     :ok =
       Flaky.test(
         app_dir: app_path,
-        concurrency: concurrency,
         filename: filename,
         line: line,
         test_path: test_path
@@ -82,9 +63,11 @@ defmodule Mix.Tasks.Flaky.Test do
 
     Mix.shell().info("""
     -a, --app - The app to run tests for. Required for an umbrella app.
-    -c, --concurrency - Number of tests to run simultaneously. Default: 2
     -f, --filename - Narrow the scope to a single file (optional)
+    -i, --ignore_all_except - String or list of strings to treat as a test failure.
     -l, --line - Narrow the scope to a line in the file (optional)
+    -m, --max_tests - Max tests to run. Default: #{@default_max_tests}
+    -s, --seed - Seed to use instead of a random one.
     -t, --test-path - The relative path to the test folder for the app. Default: "test"
     """)
 

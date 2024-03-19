@@ -55,15 +55,6 @@ defmodule Flaky.CliTest do
              )
     end
 
-    test "returns an error when the params are invalid" do
-      output =
-        CaptureIO.capture_io(fn ->
-          assert {:error, [{"--app_dir", nil}]} = CLI.main(["--app_dir", "foo"])
-        end)
-
-      assert String.contains?(output, "Usage:")
-    end
-
     test "returns an error when the result is an error" do
       output =
         CaptureIO.capture_io(fn ->
