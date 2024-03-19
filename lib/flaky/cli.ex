@@ -10,7 +10,7 @@ defmodule Flaky.CLI do
     --filename, -f          Filename to test. Only used when app_dir is set.
     --ignore_all_except, -i String or list of strings to treat as a test failure.
     --line, -l              Line number to test. Only used when filename is set.
-    --max_tests, -m         Max tests to run. Default is #{@default_max_tests}.
+    --max_tests, -m         Max tests to run. Default is #{Flaky.Options.default_max_tests()}.
     --seed, -s              Seed to use instead of a random one.
     --test_path, -t         Relative path from app dir to the dir to test. Default is "test".
   """
