@@ -11,9 +11,7 @@ defmodule Flaky.Options do
 
   defstruct [
     :app_dir,
-    :filename,
     :ignore_all_except,
-    :line,
     :seed,
     :test_path,
     max_tests: @default_max_tests
@@ -21,9 +19,7 @@ defmodule Flaky.Options do
 
   @type t() :: %__MODULE__{
           app_dir: String.t(),
-          filename: String.t() | nil,
           ignore_all_except: String.t() | [String.t()] | nil,
-          line: non_neg_integer() | nil,
           max_tests: non_neg_integer() | nil,
           seed: integer() | nil,
           test_path: String.t()
@@ -33,9 +29,7 @@ defmodule Flaky.Options do
 
   @aliases [
     a: :app_dir,
-    f: :filename,
     i: :ignore_all_except,
-    l: :line,
     m: :max_tests,
     s: :seed,
     t: :test_path
@@ -43,9 +37,7 @@ defmodule Flaky.Options do
 
   @switches [
     app_dir: :string,
-    filename: :string,
     ignore_all_except: :string,
-    line: :integer,
     max_tests: :integer,
     seed: :integer,
     test_path: :string
@@ -60,9 +52,7 @@ defmodule Flaky.Options do
 
     %__MODULE__{
       app_dir: Keyword.fetch!(opts, :app_dir),
-      filename: Keyword.get(opts, :filename),
       ignore_all_except: Keyword.get(opts, :ignore_all_except),
-      line: Keyword.get(opts, :line),
       max_tests: Keyword.get(opts, :max_tests, @default_max_tests),
       seed: Keyword.get(opts, :seed),
       test_path: Keyword.get(opts, :test_path, "test")

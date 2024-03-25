@@ -29,16 +29,14 @@ defmodule Flaky.CliTest do
                    CLI.main([
                      "--app-dir",
                      @fail_app_dir,
-                     "--filename",
-                     "tests_fail_test.exs",
                      "--ignore-all-except",
                      "tests_fail_test.exs:10",
-                     "--line",
-                     "3",
                      "--max-tests",
                      "10",
                      "--seed",
-                     "1234"
+                     "1234",
+                     "--test-path",
+                     "test/tests_fail_test.exs:3"
                    ])
         end)
 

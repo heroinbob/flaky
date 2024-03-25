@@ -25,8 +25,7 @@ defmodule Flaky.SynchronousTestsTests do
     test "scopes to the filename when given" do
       options = %Options{
         app_dir: @all_pass_app_dir,
-        filename: "all_tests_pass_test.exs",
-        test_path: "test"
+        test_path: "test/all_tests_pass_test.exs"
       }
 
       assert {:ok, output} = SynchronousTests.perform(options)
@@ -36,8 +35,7 @@ defmodule Flaky.SynchronousTestsTests do
     test "scopes to the given path and filename when given" do
       options = %Options{
         app_dir: @all_pass_app_dir,
-        filename: "even_moar_test.exs",
-        test_path: "test/moar"
+        test_path: "test/moar/even_moar_test.exs"
       }
 
       assert {:ok, output} = SynchronousTests.perform(options)
@@ -47,9 +45,7 @@ defmodule Flaky.SynchronousTestsTests do
     test "scopes to the line when given a file and line" do
       options = %Options{
         app_dir: @all_pass_app_dir,
-        filename: "all_tests_pass_test.exs",
-        line: 5,
-        test_path: "test"
+        test_path: "test/all_tests_pass_test.exs:5"
       }
 
       assert {:ok, output} = SynchronousTests.perform(options)
@@ -69,18 +65,6 @@ defmodule Flaky.SynchronousTestsTests do
 
       assert {:ok, output} = SynchronousTests.perform(options)
       assert String.contains?(output, "Randomized with seed 42")
-    end
-
-    test "ignores the line when no filename is given" do
-      options = %Options{
-        app_dir: @all_pass_app_dir,
-        line: 666,
-        test_path: "test"
-      }
-
-      assert {:ok, output} = SynchronousTests.perform(options)
-      assert String.contains?(output, " 6 tests, 0 failures")
-      refute String.contains?(output, "666")
     end
 
     test "returns :error when there is a test failure" do

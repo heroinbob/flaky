@@ -9,9 +9,7 @@ defmodule Flaky.OptionsTest do
     test "returns a map when given app_dir" do
       assert Options.from_argv(["--app-dir", "test"]) == %Options{
                app_dir: "test",
-               filename: nil,
                ignore_all_except: nil,
-               line: nil,
                max_tests: @max_tests,
                seed: nil,
                test_path: "test"
@@ -22,26 +20,20 @@ defmodule Flaky.OptionsTest do
       assert Options.from_argv(~w[
         --app-dir
         test
-        --filename
-        tests_fail_test.exs
         --ignore-all-except
         tests_fail_test.exs:10
-        --line
-        3
         --max-tests
         10
         --seed
         1234
         --test-path
-        foo
+        foo/tests_fail_test.exs:3
       ]) == %Options{
                app_dir: "test",
-               filename: "tests_fail_test.exs",
                ignore_all_except: "tests_fail_test.exs:10",
-               line: 3,
                max_tests: 10,
                seed: 1234,
-               test_path: "foo"
+               test_path: "foo/tests_fail_test.exs:3"
              }
     end
 

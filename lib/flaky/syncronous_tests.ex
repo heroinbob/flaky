@@ -6,21 +6,14 @@ defmodule Flaky.SynchronousTests do
   """
   def perform(
         %Options{
-          filename: filename,
-          line: line,
           seed: seed,
           test_path: test_path
         } = opts
       ) do
-    filename
-    |> maybe_filter(line, test_path)
+    [test_path]
     |> maybe_seed(seed)
     |> run_mix_command(opts)
   end
-
-  defp maybe_filter(nil = _filename, _line, test_path), do: [test_path]
-  defp maybe_filter(filename, nil = _line, test_path), do: ["#{test_path}/#{filename}"]
-  defp maybe_filter(filename, line, test_path), do: ["#{test_path}/#{filename}:#{line}"]
 
   defp maybe_seed(args, nil = _seed), do: args
   defp maybe_seed(args, seed), do: ["--seed", inspect(seed) | args]
