@@ -21,60 +21,14 @@ defmodule Flaky.CLI do
     `./flaky --app_dir /home/me/ --test-path /test/folder/filename.exs`
     `./flaky --app_dir /home/me/ --test-path /test/folder/filename.exs:42`
   """
+  import Flaky.Printer
 
   alias Flaky.Options
-  alias Flaky.SynchronousTests
-
-  defdelegate puts(string), to: IO
-  defdelegate write(string), to: IO
 
   def main(args \\ []) do
     args
     |> Options.from_argv()
-    |> tap(fn _opts -> puts("Starting tests...") end)
-    |> test()
-  end
-
-  defp get_progress(count) do
-    if Integer.mod(count, 10) == 0, do: count, else: "."
-  end
-
-  defp test(%{max_tests: max_tests} = opts, count \\ 1) do
-    case SynchronousTests.perform(opts) do
-      {:error, output} = error ->
-        puts("\n\nTest failed!\n\n#{inspect(output)}")
-
-        error
-
-      {:ok, {:ignored, output}} ->
-        new_count = count + 1
-
-        if new_count <= max_tests do
-          puts("\nFailure ignored:\n\n#{output}")
-          test(opts, new_count)
-        else
-          puts("\nMax tests has been reached. Nothing was flaky!")
-          :ok
-        end
-
-      {:ok, output} ->
-        new_count = count + 1
-
-        cond do
-          count == 1 ->
-            # Always print first test results. This allows one to compare a good run against
-            # a bad run with any debug values being printed out.
-            puts("First test passed:\n\n#{output}")
-            test(opts, new_count)
-
-          new_count <= max_tests ->
-            count |> get_progress() |> write()
-            test(opts, new_count)
-
-          true ->
-            puts("\nMax tests has been reached. Nothing was flaky!")
-            :ok
-        end
-    end
+    |> tap(fn _opts -> print_info("Starting tests...") end)
+    |> Flaky.test()
   end
 end

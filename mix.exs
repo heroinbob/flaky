@@ -18,7 +18,10 @@ defmodule Flaky.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:credo, "~> 1.7.3", runtime: false},
+      {:dialyxir, "~> 1.4.1", only: [:dev, :test], runtime: false}
+    ]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
