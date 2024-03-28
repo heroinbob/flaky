@@ -12,8 +12,8 @@ defmodule Flaky do
   def test(%mod{max_tests: max_tests} = opts, count \\ 1, io_source \\ IO)
       when mod in [MixOptions, Options] do
     case SynchronousTests.perform(opts) do
-      {:error, output} = error ->
-        print_error("\n\nTest failed!\n\n#{inspect(output)}", io_source)
+      {:error, {_exit_code, output}} = error ->
+        print_error("\n\nTest failed!\n\n#{output}", io_source)
 
         error
 
